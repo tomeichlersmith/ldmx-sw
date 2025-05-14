@@ -18,6 +18,7 @@ struct EcalTP {
   uint32_t layer;
   uint32_t module;
   uint32_t cell;
+  std::pair<double, double> localposition;
 
   bool operator<(const EcalTP &other) const { return tp > other.tp; }
   void fill(int _tid, int _tp) {
@@ -28,6 +29,7 @@ struct EcalTP {
     module = 0;
     cell = 0;
     tp_lin = 0;
+    localposition = {0.0, 0.0};
   }
   void fill(int _tid, int _tp, int _layer, int _module, int _cell,
             int _tp_lin) {
@@ -37,6 +39,17 @@ struct EcalTP {
     module = _module;
     cell = _cell;
     tp_lin = _tp_lin;
+    localposition = {0.0, 0.0};
+  }
+  void fill(int _tid, int _tp, int _layer, int _module, int _cell,
+            int _tp_lin, std::pair<double, double> _localposition) {
+    tid = _tid;
+    tp = _tp;
+    layer = _layer;
+    module = _module;
+    cell = _cell;
+    tp_lin = _tp_lin;
+    localposition = _localposition;
   }
   void writeToFile(FILE *file) const {
     fwrite(&tp, sizeof(uint8_t), 1, file);
@@ -45,6 +58,7 @@ struct EcalTP {
     fwrite(&module, sizeof(uint32_t), 1, file);
     fwrite(&cell, sizeof(uint32_t), 1, file);
     fwrite(&tp_lin, sizeof(uint32_t), 1, file);
+    fwrite(&localposition, sizeof(std::pair<double, double>), 1, file);
   }
   void readFromFile(FILE *file) {
     fread(&tp, sizeof(uint8_t), 1, file);
@@ -53,6 +67,7 @@ struct EcalTP {
     fread(&module, sizeof(uint32_t), 1, file);
     fread(&cell, sizeof(uint32_t), 1, file);
     fread(&tp_lin, sizeof(uint32_t), 1, file);
+    fread(&localposition, sizeof(std::pair<double, double>), 1, file);
   }
 };
 

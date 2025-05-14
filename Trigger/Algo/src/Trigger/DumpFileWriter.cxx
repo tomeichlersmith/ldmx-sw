@@ -24,12 +24,16 @@ void DumpFileWriter::analyze(const framework::Event& event) {
     // compressed ECal digis are 8xADCs (HCal will be 4x)
     ecalTpToE cvt;
     float e = cvt.calc(trigDigi.linearPrimitive(), tid.layer());
+    
+    //ldmx::EcalGeometry egeo;
+
+    ecal::EcalTriggerGeometry egeo(trigDigi.getId());
 
     ldmx_int::EcalTP tp;
     // tp.fill( trigDigi.getId(), trigDigi.getPrimitive() );
     // store complete information for firmware studies
     tp.fill(trigDigi.getId(), trigDigi.getPrimitive(), tid.layer(),
-            tid.module(), tid.triggercell(), int(e));
+            tid.module(), tid.triggercell(), int(e), egeo.localPosition(trigDigi.getId()) );
     myEvent.EcalTPs.push_back(tp);
   }
 
